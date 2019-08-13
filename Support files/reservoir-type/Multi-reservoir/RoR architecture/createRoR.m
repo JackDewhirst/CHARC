@@ -61,22 +61,45 @@ for pop_indx = 1:config.pop_size
     
     
     %% weights and connectivity of all reservoirs
+    % I want to set the density to some fixed valued for the connection matrices,
+    % then I also want to go into mutateRoR and force the connection
+    % matrices to stay at the same value of denisty throughout the process
     for i= 1:config.num_reservoirs
         
-        for j= 1:config.num_reservoirs
-            
-            population(pop_indx).connectivity(i,j) =  10/population(pop_indx).nodes(i); 
-            
-            internal_weights = sprand(population(pop_indx).nodes(i), population(pop_indx).nodes(j), population(pop_indx).connectivity(i,j));
-            internal_weights(internal_weights ~= 0) = ...
-                internal_weights(internal_weights ~= 0)  - 0.5;
-            
-            % assign scaling for inner weights 
-            population(pop_indx).W_scaling(i,j) = 2*rand;            
-            population(pop_indx).W{i,j} = internal_weights; 
+        for j= 1:config.num_reservoirs 
+            if config.connection_density == 0 || i==j
+                population(pop_indx).connectivity(i,j) =  10/population(pop_indx).nodes(i); 
+
+                internal_weights = sprand(population(pop_indx).nodes(i), population(pop_indx).nodes(j), population(pop_indx).connectivity(i,j));
+                internal_weights(internal_weights ~= 0) = ...
+                    internal_weights(internal_weights ~= 0)  - 0.5;
+
+                % assign scaling for inner weights 
+                population(pop_indx).W_scaling(i,j) = 2*rand;            
+                population(pop_indx).W{i,j} = internal_weights; 
+            else %I want for the below to just take config.connection_density and give me that many conections
+                population(pop_indx).connectivity(i,j) =  config.connection_density;
+                pos = randperm(population(pop_indx).nodes(i)^2, ceil(config.connection_density ...
+                    *(population(pop_indx).nodes(i))^2));
+                internal_weights = sparse(population(pop_indx).nodes(i),population(pop_indx).nodes(i));
+                %internal_weights = sparse(population(pop_indx).nodes(i),population(pop_indx).nodes(i));
+                for k=1:length(pos)
+                    internal_weights(pos(k)) = rand - 0.5;
+                end
+
+                % assign scaling for inner weights 
+                population(pop_indx).W_scaling(i,j) = 2*rand;            
+                population(pop_indx).W{i,j} = internal_weights; 
+            end
 
         end
-            population(pop_indx).total_units = population(pop_indx).total_units + population(pop_indx).nodes(i); 
+        
+        %I then want to prune the interconnects. e.g. two 50 node
+        %reservoirs are gonna be in a 100 node matrix. areas
+        %(50-100,1-50) and (1-50,50-100) represent connections between the
+        %two reservoirs. I can fiddle the 
+        
+        population(pop_indx).total_units = population(pop_indx).total_units + population(pop_indx).nodes(i); 
     end
     
 

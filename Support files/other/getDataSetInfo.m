@@ -22,6 +22,11 @@ config.training_type = 'Ridge';              % blank is psuedoinverse. Other opt
 %% change/add parameters depending on reservoir type
 switch(config.res_type)
     
+    case 'RoR'
+        config.connection_density = 0.01 ; %force density in initial pop and through evolution
+                                        %if set to zero density will be
+                                        %applied normally
+    
     case 'ELM'
         config.leak_on = 0;                           % add leak states
 
@@ -41,7 +46,6 @@ switch(config.res_type)
         if length(config.graph_type) ~= length(config.num_nodes) && length(config.self_loop) ~= length(config.num_nodes)
             error('Number of graph types does not match number of reservoirs. Add more in getDataSetInfo.m')
         end
-        
         % node details and connectivity
         config.ensemble_graph = 0;              % no connections between mutli-graph reservoirs
         config = getShape(config);              % call function to make graph.

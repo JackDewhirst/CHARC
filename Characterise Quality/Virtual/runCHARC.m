@@ -31,7 +31,7 @@ end
 
 % type of network to evolve
 config.res_type = 'RoR';                % state type of reservoir to use. E.g. 'RoR' (Reservoir-of-reservoirs/ESNs), 'ELM' (Extreme learning machine), 'Graph' (graph network of neurons), 'DL' (delay line reservoir) etc. Check 'selectReservoirType.m' for more.
-config.num_nodes = [25,25];                  % num of nodes in each sub-reservoir, e.g. if config.num_nodes = {10,5,15}, there would be 3 sub-reservoirs with 10, 5 and 15 nodes each. For one reservoir, sate as a non-cell, e.g. config.num_nodes = 25
+config.num_nodes = 100;                  % num of nodes in each sub-reservoir, e.g. if config.num_nodes = {10,5,15}, there would be 3 sub-reservoirs with 10, 5 and 15 nodes each. For one reservoir, sate as a non-cell, e.g. config.num_nodes = 25
 config = selectReservoirType(config);   % collect function pointers for the selected reservoir type 
 
 % Network details
@@ -49,7 +49,7 @@ config.dataset = 'blank';
 [config] = getDataSetInfo(config);
 
 %% Evolutionary parameters
-config.num_tests = 1;                        % num of tests/runs
+config.num_tests = 5;                        % num of tests/runs
 config.pop_size = 100;                       % initail population size. Note: this will generally bias the search to elitism (small) or diversity (large)
 config.total_gens = 2000;                    % number of generations to evolve 
 config.mut_rate = 0.1;                       % mutation rate
@@ -66,7 +66,7 @@ config.p_min_check = 200;                   % change novelty threshold dynamical
 config.gen_print = 50;                       % after 'gen_print' generations display archive and database
 config.start_time = datestr(now, 'HH:MM:SS');
 config.figure_array = [figure figure];
-config.save_gen = inf;                       % save data at generation = save_gen
+config.save_gen = 100;                       % save data at generation = save_gen
 config.param_indx = 1;                      % index for recording database quality; start from 1
 
 % prediction parameters
@@ -202,7 +202,7 @@ for tests = 1:config.num_tests
             plotQuality(quality,config);
         end
     
-        % safe details to disk
+        % save details to disk
        if mod(gen,config.save_gen) == 0           
             saveData(database_history,database,quality,tests,config);
        end

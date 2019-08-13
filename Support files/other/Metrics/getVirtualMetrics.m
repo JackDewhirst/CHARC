@@ -107,12 +107,24 @@ for metric_item = 1:length(config.metrics)
 
             % measure MC multiple times
             for num_tests = 1:3
-                temp_MC(num_tests) = memoryLengthTest(individual,config,num_tests);
+                temp_MC(num_tests) = testMC(individual,config,num_tests);
             end
            
             MC = mean(temp_MC);
     
             metrics = [metrics MC];
+            
+            %JD 'Density' metric
+        case 'Density'
+     
+            for row = 1:size(size(individual.W,1)) %cycle through sub-reservoirs and connections
+                for col = 1:size(size(individual.W,2))
+                    D(i) = nnz(individual.W{row,col})/ (size(individual.W{row,col},2)*size(individual.W{row,col},1) ); %number of non-zero elements
+                                                % divided by 
+                end
+            end
+            
+            metrics = [metrics D];
     end
 end
 
