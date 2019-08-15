@@ -65,7 +65,7 @@ config.p_min_start = 3;%sum(config.num_nodes)/10;  % novelty threshold. In gener
 config.p_min_check = 200;                   % change novelty threshold dynamically after "p_min_check" generations.
 
 % general params
-config.gen_print = 25;                       % after 'gen_print' generations display archive and database
+config.gen_print = 200;                       % after 'gen_print' generations display archive and database
 config.start_time = datestr(now, 'HH:MM:SS');
 config.figure_array = [figure figure];
 config.save_gen = 1500;                       % save data at generation = save_gen
@@ -102,13 +102,13 @@ for tests = 1:config.num_tests
         ppm = ParforProgMon('Initial population: ', config.pop_size);
         parfor pop_indx = 1:config.pop_size
             warning('off','all')
-            population(pop_indx).behaviours = getVirtualMetrics(population(pop_indx),config);
+            population(pop_indx).behaviours = getMetrics(population(pop_indx),config);
             ppm.increment();
         end
     else
         for pop_indx = 1:config.pop_size
             tic
-            population(pop_indx).behaviours = getVirtualMetrics(population(pop_indx),config);
+            population(pop_indx).behaviours = getMetrics(population(pop_indx),config);
             fprintf('\n i = %d, took: %.4f\n',pop_indx,toc);
         end
     end
@@ -163,7 +163,7 @@ for tests = 1:config.num_tests
         population(loser) = config.mutFcn(population(loser),config);
         
         %% Evaluate and update fitness of offspring/loser
-        population(loser).behaviours = getVirtualMetrics(population(loser),config);
+        population(loser).behaviours = getMetrics(population(loser),config);
         
         % Store behaviours
         pop_behaviours(loser,:) = population(loser).behaviours;
