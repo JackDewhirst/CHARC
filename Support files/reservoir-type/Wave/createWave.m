@@ -10,7 +10,7 @@ for pop_indx = 1:config.pop_size
     population(pop_indx).test_error = 1;
     
     % add single bias node
-    population(pop_indx).bias_node = 1;
+    population(pop_indx).bias_node = 0;
     
     % assign input/output count
     if isempty(config.train_input_sequence) 
@@ -32,15 +32,19 @@ for pop_indx = 1:config.pop_size
         population(pop_indx).leak_rate(i) = rand;
         
         %addtional paramters
-        population(pop_indx).time_period(i) = randi([1 10]);
-        population(pop_indx).wave_speed(i) = randi([1 20]);
-        population(pop_indx).damping_constant(i) = rand;
-        population(pop_indx).time_step(i) = 0.05;
+        population(pop_indx).time_period(i) = randi([config.time_period_minimum config.time_period_maximum]);
+        population(pop_indx).wave_speed(i) = randi([config.wave_speed_min config.wave_speed_max]); %material property = phase veolicty
+        population(pop_indx).damping_constant(i) = rand*2; % 0 = undamped, <1 underdamped, =1 critically damped, >1 overdamped 
+        population(pop_indx).time_step(i) = 0.05; %timestep incrememnts in simulation (smaller = more accurate
         
-        % fix = 1: All boundary points have a constant value of 1
+        % fix = 1: All boundary points have a constant value of 0
         % cont = 1; Eliminate the wave and bring elements to their steady state.
         % connect = 1; Water flows across the edges and comes back from the opposite side
-        population(pop_indx).boundary_conditions(i,:) = round(rand(1,3));
+        
+        %population(pop_indx).boundary_conditions(i,:) = round(rand(1,3));
+        %this would give random boundary conditions
+        
+        population(pop_indx).boundary_conditions(i,:) = [0 1 0];
         
         
        %inputweights

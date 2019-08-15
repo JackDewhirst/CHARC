@@ -49,12 +49,12 @@ for n = 2:size(input_sequence,1)
 %             x{i}(n,:) = x{i}(n,:) + ((individual.W{i,k}*individual.W_scaling(i,k))*states{k}(n-1,:)')';
 %         end
         
-        % Wave equation
+        %%Wave equation 
         newH{i} = Wave_sim(sqrt(individual.nodes(i)),x_size(i,:),y_size(i,:),individual.time_step(i)...
             ,individual.wave_speed(i),individual.damping_constant(i),... % apply liquid parameters
             H{i},oldH{i},... % set current and previous states
             individual.boundary_conditions(i,1),individual.boundary_conditions(i,2),individual.boundary_conditions(i,3)); %set boundary conditions
-     
+
         if config.run_sim
             set(h{i},'zdata',newH{i},'facealpha',0.65);
             set(gca, 'xDir', 'reverse',...
@@ -63,8 +63,8 @@ for n = 2:size(input_sequence,1)
             drawnow
             %pause(config.sim_speed);
         end
-    
-        oldH{i}=H{i};
+
+        oldH{i}=H{i}; %this is required for Wave_sim
         
         %add input
         newH{i} = newH{i} + reshape(input_mul{i}(n,:),node_grid_size(i),node_grid_size(i));

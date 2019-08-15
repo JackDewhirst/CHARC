@@ -157,10 +157,10 @@ elseif cont
 %                FIXED BOUNDARIES MODUS
 %                All boundary points have a constant value of 1.
 elseif  fix                   
-    newH(1,:)=1;
-    newH(n,:)=1;
-    newH(:,1)=1;
-    newH(:,n)=1;
+    newH(1,:)=0;
+    newH(n,:)=0;
+    newH(:,1)=0;
+    newH(:,n)=0;
 
     velocity(1,:)=0;
     velocity(n,:)=0;

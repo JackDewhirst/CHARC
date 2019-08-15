@@ -33,10 +33,11 @@ pos = randperm(length(L),ceil(config.rec_rate*length(L)));
 L(pos) = W(pos);
 loser.damping_constant = reshape(L,size(loser.damping_constant));
 
+%keep boundary conditions fixed
 W= winner.boundary_conditions(:);
 L = loser.boundary_conditions(:);
-pos = randperm(length(L),ceil(config.rec_rate*length(L)));
-L(pos) = W(pos);
+%pos = randperm(length(L),ceil(config.rec_rate*length(L)));
+%L(pos) = W(pos);
 loser.boundary_conditions = reshape(L,size(loser.boundary_conditions));
 
 % cycle through sub-reservoirs
