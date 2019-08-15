@@ -23,18 +23,29 @@ loser.W_scaling = reshape(L,size(loser.W_scaling));
 
 % cycle through sub-reservoirs
 for i = 1:config.num_reservoirs
-    
     % input weights
-    W= winner.input_weights{i}(:);
+    W = winner.input_weights{i}(:);
     L = loser.input_weights{i}(:);
     pos = randperm(length(L),ceil(config.rec_rate*length(L)));         
     L(pos) = W(pos);
     loser.input_weights{i} = reshape(L,size(loser.input_weights{i}));
+<<<<<<< HEAD
        
+=======
+    
+    % params - W_scaling
+    W = winner.W_scaling(i,:);
+    L = loser.W_scaling(i,:);
+    pos = randi([1 length(L)],ceil(config.rec_rate*length(L)),1);
+    L(pos) = W(pos);
+    loser.W_scaling(i,:) = reshape(L,size(loser.W_scaling(i,:)));
+    
+>>>>>>> 727b0945b67ad1eb721003fdadc26ff40edfa85d
     % inner weights
     for j = 1:config.num_reservoirs
-        W= winner.W{i,j}(:);
+        W = winner.W{i,j}(:);
         L = loser.W{i,j}(:);
+<<<<<<< HEAD
         pos = randperm(length(L),ceil(config.rec_rate*length(L)));         
         L(pos) = W(pos);
         loser.W{i,j} = reshape(L,size(loser.W{i,j}));
@@ -48,6 +59,13 @@ for i = 1:config.num_reservoirs
         L(pos) = W(pos);
         loser.activ_Fcn(i,:) = reshape(L,size(loser.activ_Fcn(i,:)));
     end
+=======
+        pos = randi([1 length(L)],ceil(config.rec_rate*length(L)),1);
+        L(pos) = W(pos);     
+        loser.W{i,j} = reshape(L,size(loser.W{i,j}));
+    end
+         
+>>>>>>> 727b0945b67ad1eb721003fdadc26ff40edfa85d
 end
 
 % for output weights
