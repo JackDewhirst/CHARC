@@ -3,7 +3,6 @@
 % - number of weights mutated is based on mut_rate; 50% chance to change existing weight or remove it
 % - 25% chance to change global parameters
 
-
 %-
 %J.D; Important note
 %if config.connectiondensity = 0 and there are sub-reservoirs
@@ -47,25 +46,15 @@ for i = 1:config.num_reservoirs
     % hidden weights
     for j = 1:config.num_reservoirs
         W = offspring.W{i,j}(:);
-<<<<<<< HEAD
-        % select weights to change
-        pos =  randperm(length(W),ceil(config.mut_rate*length(W)));
-        for n = 1:length(pos)
-            if rand < 0.5 % 50% chance to zero weight
-                W(pos(n)) = 0;
-            else
-                W(pos(n)) = 2*rand-1;%0.5;
-            end   
-=======
-        
+
         if i == j
              % select weights to change
-            pos =  randi([1 length(W)],ceil(config.mut_rate*length(W)),1);
+            pos =  randperm(length(W),ceil(config.mut_rate*length(W)));
             for n = 1:length(pos)
                 if rand < 0.5 % 50% chance to zero weight
                    W(pos(n)) = 0;
                 else
-                    W(pos(n)) = rand-0.5;
+                    W(pos(n)) = 2*rand-1;%0.5;
                 end   
             end
                 
@@ -86,7 +75,7 @@ for i = 1:config.num_reservoirs
                         end
                         W(flip) = rand-0.5; % if it is, turn it on
                     end
-                    
+                   
                 else                        %if position is zero
                     if rand < 0.5 %50 chance to make position non_zero
                         non_zero = find(W);
@@ -128,9 +117,8 @@ for i = 1:config.num_reservoirs
                     
                 end
                 
-            else
-                
-            end
+            end      
+        end
                 
             
             %while (density < config.connection_density - 0.05)  || ...
@@ -148,19 +136,14 @@ for i = 1:config.num_reservoirs
             
             offspring.W{i,j} = reshape(W,size(offspring.W{i,j}));
             
->>>>>>> 727b0945b67ad1eb721003fdadc26ff40edfa85d
+
+        % mutate activ fcns
+        if size(offspring.activ_Fcn,2) > 1
+            activFcn = offspring.activ_Fcn(i,:);
+            pos =  randperm(length(activFcn),sum(rand(length(activFcn),1) < config.mut_rate));
+            activFcn(pos) = {config.activ_list{randi([1 length(config.activ_list)],length(pos),1)}};
+            offspring.activ_Fcn(i,:) = reshape(activFcn,size(offspring.activ_Fcn(i,:)));
         end
-            
-        
-    end
-    
-    % mutate activ fcns
-    if size(offspring.activ_Fcn,2) > 1
-        activFcn = offspring.activ_Fcn(i,:);
-        pos =  randperm(length(activFcn),sum(rand(length(activFcn),1) < config.mut_rate));
-        activFcn(pos) = {config.activ_list{randi([1 length(config.activ_list)],length(pos),1)}};
-        offspring.activ_Fcn(i,:) = reshape(activFcn,size(offspring.activ_Fcn(i,:)));
-    end
 end
 
 % mutate output weights

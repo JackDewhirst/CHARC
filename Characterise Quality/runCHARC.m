@@ -32,15 +32,9 @@ if isempty(gcp) && config.parallel
 end
 
 % type of network to evolve
-<<<<<<< HEAD:Characterise Quality/runCHARC.m
-config.res_type = 'Wave';                % state type of reservoir to use. E.g. 'RoR' (Reservoir-of-reservoirs/ESNs), 'ELM' (Extreme learning machine), 'Graph' (graph network of neurons), 'DL' (delay line reservoir) etc. Check 'selectReservoirType.m' for more.
-config.num_nodes = [10];                  % num of nodes in each sub-reservoir, e.g. if config.num_nodes = {10,5,15}, there would be 3 sub-reservoirs with 10, 5 and 15 nodes each. For one reservoir, sate as a non-cell, e.g. config.num_nodes = 25
-config = selectReservoirType(config);   % collect function pointers for the selected reservoir type
-=======
 config.res_type = 'RoR';                % state type of reservoir to use. E.g. 'RoR' (Reservoir-of-reservoirs/ESNs), 'ELM' (Extreme learning machine), 'Graph' (graph network of neurons), 'DL' (delay line reservoir) etc. Check 'selectReservoirType.m' for more.
 config.num_nodes = 100;                  % num of nodes in each sub-reservoir, e.g. if config.num_nodes = {10,5,15}, there would be 3 sub-reservoirs with 10, 5 and 15 nodes each. For one reservoir, sate as a non-cell, e.g. config.num_nodes = 25
 config = selectReservoirType(config);   % collect function pointers for the selected reservoir type 
->>>>>>> 727b0945b67ad1eb721003fdadc26ff40edfa85d:Characterise Quality/Virtual/runCHARC.m
 
 % Network details
 config.metrics = {'KR','GR','MC'};       % behaviours that will be used; name metrics to use and order of metrics
