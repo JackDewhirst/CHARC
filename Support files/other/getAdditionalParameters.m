@@ -29,6 +29,12 @@ config.discrete = 0;
 
 switch(config.res_type)
     
+    case 'RoR'
+        config.connection_density = [NaN 0.2; ...
+                                    NaN NaN] ;
+        config.evolve_inner = 0; % =1 will evolve weights internal to subreservoirs
+        config.evolve_connection = 0; %=1 applies evolution to subreservoir interconnects
+    
     case 'ELM'
         config.leak_on = 0;                           % add leak states
 

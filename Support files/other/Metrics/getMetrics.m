@@ -113,15 +113,9 @@ for metric_item = 1:length(config.metrics)
         case 'MC'
 
             % measure MC multiple times
-<<<<<<< HEAD:Support files/other/Metrics/getMetrics.m
-            %for 
-            temp_MC = testMC(individual,config,1);
-            %end
-=======
             for num_tests = 1:3
                 temp_MC(num_tests) = testMC(individual,config,num_tests);
             end
->>>>>>> 727b0945b67ad1eb721003fdadc26ff40edfa85d:Support files/other/Metrics/getVirtualMetrics.m
            
             MC = mean(temp_MC);
     

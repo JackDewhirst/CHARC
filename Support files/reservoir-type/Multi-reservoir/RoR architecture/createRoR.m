@@ -67,7 +67,7 @@ for pop_indx = 1:config.pop_size
     for i= 1:config.num_reservoirs
         
         for j= 1:config.num_reservoirs 
-            if config.connection_density == 0 || i==j
+            if isnan(config.connection_density(i,j))
                 population(pop_indx).connectivity(i,j) =  10/population(pop_indx).nodes(i); 
 
                 internal_weights = sprand(population(pop_indx).nodes(i), population(pop_indx).nodes(j), population(pop_indx).connectivity(i,j));
@@ -78,26 +78,23 @@ for pop_indx = 1:config.pop_size
                 population(pop_indx).W_scaling(i,j) = 2*rand;            
                 population(pop_indx).W{i,j} = internal_weights; 
             else %I want for the below to just take config.connection_density and give me that many conections
-                population(pop_indx).connectivity(i,j) =  config.connection_density;
-                pos = randperm(population(pop_indx).nodes(i)^2, ceil(config.connection_density ...
-                    *(population(pop_indx).nodes(i))^2));
-                internal_weights = sparse(population(pop_indx).nodes(i),population(pop_indx).nodes(i));
-                %internal_weights = sparse(population(pop_indx).nodes(i),population(pop_indx).nodes(i));
+                population(pop_indx).connectivity(i,j) =  config.connection_density(i,j);
+                internal_weights = sparse(population(pop_indx).nodes(i),population(pop_indx).nodes(j));
+                pos = randperm(numel(internal_weights), fillmissing(config.connection_density(i,j), 'constant', 0) ...
+                    *numel(internal_weights)) ;
+                internal_weights = reshape(internal_weights, 1, []);
                 for k=1:length(pos)
                     internal_weights(pos(k)) = rand - 0.5;
                 end
-
+                internal_weights = reshape(internal_weights, population(pop_indx).nodes(i), population(pop_indx).nodes(j));
+                
                 % assign scaling for inner weights 
                 population(pop_indx).W_scaling(i,j) = 2*rand;            
                 population(pop_indx).W{i,j} = internal_weights; 
             end
 
         end
-        
-        %I then want to prune the interconnects. e.g. two 50 node
-        %reservoirs are gonna be in a 100 node matrix. areas
-        %(50-100,1-50) and (1-50,50-100) represent connections between the
-        %two reservoirs. I can fiddle the 
+
         
         population(pop_indx).total_units = population(pop_indx).total_units + population(pop_indx).nodes(i); 
     end

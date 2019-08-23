@@ -5,7 +5,7 @@
 
 %-
 %J.D; Important note
-%if config.connectiondensity = 0 and there are sub-reservoirs
+%if config.connection_density = 0 and there are sub-reservoirs
 %then this function will break
 %-
 
@@ -45,6 +45,13 @@ for i = 1:config.num_reservoirs
         
     % hidden weights
     for j = 1:config.num_reservoirs
+        
+        if(~config.evolve_inner) && i==j %when config.evolve_inner=0 subres internal weights are not evolved
+            continue
+        elseif(~config.evolve_connection) && i ~= j %when config.evolve_connection = 0 subres interconnect weights are not evolved
+            continue
+        end
+        
         W = offspring.W{i,j}(:);
 
         if i == j
@@ -54,7 +61,7 @@ for i = 1:config.num_reservoirs
                 if rand < 0.5 % 50% chance to zero weight
                    W(pos(n)) = 0;
                 else
-                    W(pos(n)) = 2*rand-1;%0.5;
+                   W(pos(n)) = 2*rand-1;
                 end   
             end
                 
@@ -119,22 +126,8 @@ for i = 1:config.num_reservoirs
                 
             end      
         end
-                
-            
-            %while (density < config.connection_density - 0.05)  || ...
-            %         (density > config.connection_density + 0.05)
-            %    pos =  randi([1 length(W)],ceil(config.mut_rate*length(W)),1);
-            %    for n = 1:length(pos)
-            %        if rand < 0.5 % 50% chance to zero weight
-            %            W(pos(n)) = 0;
-            %        else
-            %            W(pos(n)) = rand-0.5;
-            %        end   
-            %    end
-            %    density = nnz(W)/ (size(W,2)*size(W,1));
-            %end
-            
-            offspring.W{i,j} = reshape(W,size(offspring.W{i,j}));
+
+        offspring.W{i,j} = reshape(W,size(offspring.W{i,j}));
             
 
         % mutate activ fcns
@@ -144,8 +137,8 @@ for i = 1:config.num_reservoirs
             activFcn(pos) = {config.activ_list{randi([1 length(config.activ_list)],length(pos),1)}};
             offspring.activ_Fcn(i,:) = reshape(activFcn,size(offspring.activ_Fcn(i,:)));
         end
+    end
 end
-
 % mutate output weights
 if config.evolve_output_weights
     output_weights = offspring.output_weights(:);
@@ -160,5 +153,6 @@ if config.evolve_output_weights
     end
     offspring.output_weights = reshape(output_weights,size(offspring.output_weights));
 end
+
 
 

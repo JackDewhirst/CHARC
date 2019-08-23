@@ -32,11 +32,17 @@ for i = 1:config.num_reservoirs
 
     % inner weights
     for j = 1:config.num_reservoirs
+        if(~config.evolve_inner) && i==j %when config.evolve_inner=0 subres internal weights are not evolved
+            continue
+        elseif(~config.evolve_connection) && i ~= j %when config.evolve_connection = 0 subres interconnect weights are not evolved
+            continue
+        end
         W = winner.W{i,j}(:);
         L = loser.W{i,j}(:);
         pos = randperm(length(L),ceil(config.rec_rate*length(L)));         
         L(pos) = W(pos);
         loser.W{i,j} = reshape(L,size(loser.W{i,j}));
+
     end   
     
     % mutate activ fcns
