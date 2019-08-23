@@ -23,9 +23,11 @@ config.training_type = 'Ridge';              % blank is psuedoinverse. Other opt
 switch(config.res_type)
     
     case 'RoR'
-        config.connection_density = 0.01 ; %force density in initial pop and through evolution
-                                        %if set to zero density will be
-                                        %applied normally
+        config.connection_density = [0, 0.01; ...
+                                     0.01, 0] ; 
+            %force density in initial pop and through evolution
+            %if set to zero density will be
+            %applied normally
     
     case 'ELM'
         config.leak_on = 0;                           % add leak states

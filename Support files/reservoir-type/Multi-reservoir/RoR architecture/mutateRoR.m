@@ -85,13 +85,6 @@ for i = 1:config.num_reservoirs
                         flip = randi([1 size(non_zero,2)]); %find another position
                         non_zero = find(W);
                         flip = non_zero(flip);
-                        %while(not_found)  
-                        %    flip = randi([1 length(nonzero)]); %find another position
-                        %    flip = nonzero(flip);
-                        %    if ismember(flip,non_zero) %check if it's non_zero
-                        %        not_found = 0;
-                        %    end
-                        %end
                         W(flip) = 0; % if it is, turn it off
                     end
                 end

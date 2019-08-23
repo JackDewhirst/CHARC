@@ -64,10 +64,11 @@ for pop_indx = 1:config.pop_size
     % I want to set the density to some fixed valued for the connection matrices,
     % then I also want to go into mutateRoR and force the connection
     % matrices to stay at the same value of denisty throughout the process
+    
     for i= 1:config.num_reservoirs
         
         for j= 1:config.num_reservoirs 
-            if config.connection_density == 0 || i==j
+            if config.connection_density(i,j) == 0 || i==j
                 population(pop_indx).connectivity(i,j) =  10/population(pop_indx).nodes(i); 
 
                 internal_weights = sprand(population(pop_indx).nodes(i), population(pop_indx).nodes(j), population(pop_indx).connectivity(i,j));
@@ -78,14 +79,15 @@ for pop_indx = 1:config.pop_size
                 population(pop_indx).W_scaling(i,j) = 2*rand;            
                 population(pop_indx).W{i,j} = internal_weights; 
             else %I want for the below to just take config.connection_density and give me that many conections
-                population(pop_indx).connectivity(i,j) =  config.connection_density;
-                pos = randperm(population(pop_indx).nodes(i)^2, ceil(config.connection_density ...
-                    *(population(pop_indx).nodes(i))^2));
-                internal_weights = sparse(population(pop_indx).nodes(i),population(pop_indx).nodes(i));
-                %internal_weights = sparse(population(pop_indx).nodes(i),population(pop_indx).nodes(i));
+                population(pop_indx).connectivity(i,j) =  config.connection_density(i,j);
+                internal_weights = sparse(population(pop_indx).nodes(j),population(pop_indx).nodes(i));
+                pos = randperm(numel(internal_weights), config.connection_density(i,j) ...
+                    *numel(internal_weights)) ;
+                internal_weights = reshape(internal_weights, 1, []);
                 for k=1:length(pos)
                     internal_weights(pos(k)) = rand - 0.5;
                 end
+                internal_weights = reshape(internal_weights, population(pop_indx).nodes(j), population(pop_indx).nodes(i));
 
                 % assign scaling for inner weights 
                 population(pop_indx).W_scaling(i,j) = 2*rand;            

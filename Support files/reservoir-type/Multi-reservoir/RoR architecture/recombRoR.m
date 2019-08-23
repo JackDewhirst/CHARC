@@ -32,6 +32,9 @@ for i = 1:config.num_reservoirs
     
     % inner weights
     for j = 1:config.num_reservoirs
+        if i==j
+            continue
+        end
         W = winner.W{i,j}(:);
         L = loser.W{i,j}(:);
         pos = randi([1 length(L)],ceil(config.rec_rate*length(L)),1);
